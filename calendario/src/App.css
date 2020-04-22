@@ -36,3 +36,30 @@
     transform: rotate(360deg);
   }
 }
+
+
+h1 { 
+  color:#008080;
+  font-family: "Times New Roman";
+}
+
+p {
+  font-family: "Times New Roman";
+}
+
+table{
+  font-family: "Times New Roman";
+}
+
+table {
+  width: 100%;
+  background-color: white;
+}
+
+table th {
+  background-color: #008080;
+}
+
+th {
+  color: white;
+}
