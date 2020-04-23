@@ -63,3 +63,15 @@ table th {
 th {
   color: white;
 }
+
+.calendarios {
+  width: 60%;
+  height: 10px;
+  padding: 20px;
+  
+}
+.startDate {
+  display: inline-block;
+  text-align: webkit-Bottom ;
+
+}

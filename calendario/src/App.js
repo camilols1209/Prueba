@@ -132,22 +132,25 @@ class  App extends React.Component{
       <div>
       <center>
       
-        <div className="form-group">
+        <div className="calendarios" >
           <DatePicker
               selected={ this.state.startDate }
               onChange={ this.handleChange }
               name="startDate"
               showTimeSelect
+              orientation="bottom"
               timeFormat="HH:mm"
               timeIntervals={30}
               timeCaption="time"
               dateFormat="yyyy-MM-d hh:mm:ss"
-          /> hasta
+          /> hasta : 
           <DatePicker
               selected={ this.state.endDate }
               onChange={ this.handleChange2 }
               name="endtDate"
               showTimeSelect
+              orientation="bottom"
+
               timeFormat="HH:mm"
               timeIntervals={30}
               timeCaption="time"
