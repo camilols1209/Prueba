@@ -84,8 +84,22 @@ app.post('/data', function(req, res){
    console.log(sql)
    con.query(sql, (err, result)=>{
     if(err) throw err;
+    var v = [];
+    var lat = result.map(function(obj) {return obj.latitude;});
+    var lon = result.map(function(obj) {return obj.longitude;});
+    for (var c =0 ; c<=lat.length -1;c++){
+        v[c]=[lat[c],lon[c]]
+
+    }
+
+    
     console.log(result);
-    res.send(result);
+    console.log(lat);
+    console.log(lon);
+    console.log(v);
+    
+    
+    res.send(v);
     con.end(); 
     
 
