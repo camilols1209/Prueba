@@ -19,12 +19,12 @@ export default class RealTime extends Component {
             fecha1: null,
             fecha2: null,
             polyline: [],
-            viewport:15
+            viewport: 15
         }
         setInterval(() => this.consulta(), 1000);
         this.consulta();
         this.getz = this.getz.bind(this);
-        
+
 
     }
 
@@ -79,17 +79,17 @@ export default class RealTime extends Component {
         console.log(data)
     }
 
-getz(){
-    const leafletMap = this.leafletMap.leafletElement;
-    console.log(leafletMap.getZoom())
-    this.setState({
-        viewport:leafletMap.getZoom()
-    })
-}
+    getz() {
+        const leafletMap = this.leafletMap.leafletElement;
+        console.log(leafletMap.getZoom())
+        this.setState({
+            viewport: leafletMap.getZoom()
+        })
+    }
     render() {
-        
-        let mapa =(<Map center={[this.state.lat, this.state.lng]} ref={m => { this.leafletMap = m; }}
-        zoom={this.state.viewport} onzoom={this.getz}> 
+
+        let mapa = (<Map center={[this.state.lat, this.state.lng]} ref={m => { this.leafletMap = m; }}
+            zoom={this.state.viewport} onzoom={this.getz}>
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="Jesús López, Ena Valbuena"
@@ -99,7 +99,7 @@ getz(){
             </Marker>
             <Polyline color="teal" positions={this.state.polyline} />
         </Map>)
-        
+
 
         return (
 
@@ -110,8 +110,8 @@ getz(){
 
 
                 <div className="container">
-                    
-                    
+
+
                     <table>
                         <tr>
                             <th>Longitud</th>
@@ -133,10 +133,10 @@ getz(){
 
                 </div>
                 <div className="container" >
-                <center>
-                {mapa}
-            </center>
-                    
+                    <center>
+                        {mapa}
+                    </center>
+
                 </div>
 
 
