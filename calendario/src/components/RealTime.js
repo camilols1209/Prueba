@@ -18,10 +18,13 @@ export default class RealTime extends Component {
             sec: null,
             fecha1: null,
             fecha2: null,
-            polyline: []
+            polyline: [],
+            viewport:15
         }
         setInterval(() => this.consulta(), 1000);
         this.consulta();
+        this.getz = this.getz.bind(this);
+        
 
     }
 
@@ -29,7 +32,7 @@ export default class RealTime extends Component {
     async consulta() {
         const that = this;
         let data = null;
-        await fetch('http://192.168.1.11:50188')
+        await fetch('http://192.168.1.4:50188')
             .then(function (response) {
                 return response.json();
             })
@@ -76,9 +79,27 @@ export default class RealTime extends Component {
         console.log(data)
     }
 
-
+getz(){
+    const leafletMap = this.leafletMap.leafletElement;
+    console.log(leafletMap.getZoom())
+    this.setState({
+        viewport:leafletMap.getZoom()
+    })
+}
     render() {
-
+        
+        let mapa =(<Map center={[this.state.lat, this.state.lng]} ref={m => { this.leafletMap = m; }}
+        zoom={this.state.viewport} onzoom={this.getz}> 
+            <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="Jesús López, Ena Valbuena"
+            />
+            <Marker position={[this.state.lat, this.state.lng]}>
+                <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
+            </Marker>
+            <Polyline color="teal" positions={this.state.polyline} />
+        </Map>)
+        
 
         return (
 
@@ -112,7 +133,10 @@ export default class RealTime extends Component {
 
                 </div>
                 <div className="container" >
-                    {this._renderMap()}
+                <center>
+                {mapa}
+            </center>
+                    
                 </div>
 
 
@@ -131,22 +155,5 @@ export default class RealTime extends Component {
     }
 
 
-    _renderMap = () => {
-        const position = [this.state.lat, this.state.lng];
-        return (
-            <center>
-                <Map center={position} zoom={13}>
-                    <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                    />
-                    <Marker position={position}>
-                        <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
-                    </Marker>
-                    <Polyline color="teal" positions={this.state.polyline} />
-                </Map>
-            </center>
-        )
-    }
 
 }
