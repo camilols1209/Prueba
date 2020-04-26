@@ -21,7 +21,7 @@ export default class History extends Component {
       fecha1: null,
       fecha2: null,
       polyline: [],
-      line: null,
+      line: "",
       viewport: 15,
       max:"5",
       place:"0"
@@ -33,6 +33,7 @@ export default class History extends Component {
     this.act = this.act.bind(this);
     this.getz = this.getz.bind(this);
     this.set_marker = this.set_marker.bind(this);
+    this.date_time = this.date_time.bind(this);
 
 
   }
@@ -94,7 +95,7 @@ export default class History extends Component {
               </div>
               <div className="form-row">
                 <div className="col-md-12 mb-2">
-                  <label for="customRange2">Example range</label>
+                  <label for="customRange2"> {this.state.line[this.state.place]}  </label>
                   <input type="range" className="custom-range" min="0" max={this.state.max}
                   step="1"id="customRange2" value={this.state.place}
                    onChange={this.act} onClickCapture={this.set_marker}/>
@@ -167,7 +168,31 @@ export default class History extends Component {
 
 
 
+date_time(horain,horaen,fechain,fechaen){
+  const h =this
+  var url = 'http://192.168.1.15:50188/data-time';
+    axios.post(url, {
+      horaen,
+      fechaen,
+      horain,
+      fechain
+    })
+      .then(function (response) {
+       
+        console.log(response.data)
+        h.setState({
+          line:response.data
+        })
 
+        
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    
+
+}
 
 
 
@@ -188,7 +213,8 @@ export default class History extends Component {
     var horaen = dato2.split(" ")[4].split(":").map(Number)
     console.log(horaen)
     console.log(fechaen)
-    var url = 'http://192.168.1.4:50188/data';
+    this.date_time(horain,horaen,fechain,fechaen)
+    var url = 'http://192.168.1.15:50188/data';
     axios.post(url, {
       horaen,
       fechaen,

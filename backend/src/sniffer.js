@@ -105,7 +105,44 @@ app.post('/data', function(req, res){
 
 });
 });
+app.post('/data-time', function(req, res){
+    var con = dbConnections();
+	console.log(req.body); 
+   var sql1='SELECT `anno`,`mes`,`dia`,`hora`,`minuto`,`segundo`FROM `location` '
+   var sql2='WHERE `anno` BETWEEN '+ req.body.fechain[0]+' AND ' +req.body.fechaen[0]
+   var sql3=' AND `mes` BETWEEN '+  req.body.fechain[1] +' AND '+  req.body.fechaen[1]
+   var sql4=' AND `dia` BETWEEN '+  req.body.fechain[2] +' AND '+  req.body.fechaen[2]
+   var sql5=' AND `hora` BETWEEN '+  req.body.horain[0] +' AND '+  req.body.horaen[0]
+   var sql=sql1+sql2+sql3+sql4+sql5
+   console.log(sql)
+   con.query(sql, (err, result)=>{
+    if(err) throw err;
+    var an = result.map(function(obj) {return obj.anno;});
+    var me = result.map(function(obj) {return obj.mes;});
+    var di = result.map(function(obj) {return obj.dia;});
+    var hor = result.map(function(obj) {return obj.hora;});
+    var min =  result.map(function(obj) {return obj.minuto});
+    var sec =  result.map(function(obj) {return obj.segundo});
+    var string_dato=[]
+   
+    for (var c =0 ; c<=an.length -1;c++){
+        string_dato[c] = an[c].toString() +
+        '-' + me[c].toString() +
+        '-' + di[c].toString() +
+        ' ' + hor[c].toString() +
+        ':' + min[c].toString() +
+        ':' + sec[c].toString();    
+        
 
+    }
+    console.log(string_dato)
+    
+    res.send(string_dato);
+    con.end(); 
+    
+
+});
+});
 
 
 server.bind(50001);
