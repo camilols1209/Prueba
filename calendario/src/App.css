@@ -1,4 +1,4 @@
-body {
+  body {
   background: rgb(91, 122, 151);  /* fallback for old browsers */
   
   
@@ -85,4 +85,10 @@ body {
     width: 300px;
 
   }
+
+.bb{
+  background:rgb(255, 255, 255);
+  width: 700px;
+  height: 400px;
+}
   

@@ -19,6 +19,10 @@ export default class NavBarJesCorp extends Component {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/history">History</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/OBDii">Datos OBDii</Link>
+                            </li>
+
                         </ul>
                     </div>
                 </div>

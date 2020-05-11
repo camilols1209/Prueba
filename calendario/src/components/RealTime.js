@@ -32,7 +32,7 @@ export default class RealTime extends Component {
     async consulta() {
         const that = this;
         let data = null;
-        await fetch('http://192.168.1.15:50188')
+        await fetch('http://192.168.1.6:50188')
             .then(function (response) {
                 return response.json();
             })
