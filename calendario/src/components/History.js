@@ -170,7 +170,7 @@ export default class History extends Component {
 
 date_time(horain,horaen,fechain,fechaen){
   const h =this
-  var url = 'http://192.168.1.6:50188/data-time';
+  var url = 'http://192.168.1.5:50188/data-time';
     axios.post(url, {
       horaen,
       fechaen,
@@ -214,7 +214,7 @@ date_time(horain,horaen,fechain,fechaen){
     console.log(horaen)
     console.log(fechaen)
     this.date_time(horain,horaen,fechain,fechaen)
-    var url = 'http://192.168.1.6:50188/data';
+    var url = 'http://192.168.1.5:50188/data';
     axios.post(url, {
       horaen,
       fechaen,

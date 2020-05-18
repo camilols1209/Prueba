@@ -132,17 +132,27 @@ app.post('/data-time', function(req, res){
 app.post('/obd', function(req, res){
     var con = dbConnections();
 	console.log(req.body); 
-   var sql1='select * from `RPMCV`'  
-   var sql2 =' where `fecha` >= '
+   var sql1='select * from `RPM`'  
+   var sql2 =' where `fecha` between '
 
    var sql3=req.body.fechain[0]+'-'+req.body.fechain[1]+'-'+req.body.fechain[2]+' '+req.body.horain[0]+':'+req.body.horain[1]+':'+req.body.horain[2]
    var sql4=req.body.fechaen[0]+'-'+req.body.fechaen[1]+'-'+req.body.fechaen[2]+' '+req.body.horaen[0]+':'+req.body.horaen[1]+':'+req.body.horaen[2]
-   var sql=sql1+sql2+'"'+sql3+'"'+' AND `fecha` <=  '+'"'+sql4+'"'
+   var sql=sql1+sql2+'"'+sql3+'"'+' AND  '+'"'+sql4+'"'
    console.log(sql)
    con.query(sql, (err, result)=>{
-    
-    
-    console.log(result);
+    var fecha = result.map(function(obj) {return obj.fecha;});
+    var rpm  = result.map(function(obj) {return obj.rpm;});
+
+    for (var c =0 ; c<=fecha.length -1;c++){
+        fecha[c]=fecha[c].toISOString().replace(/T/, ' ').replace(/\..+/, '') 
+        rpm[c] ={y:rpm[c],x:c}
+
+    }
+    var dato ={fehca: fecha,
+                rpm : rpm }
+
+    console.log(dato);
+    res.send(dato)
     
     con.end(); 
     

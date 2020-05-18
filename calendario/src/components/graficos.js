@@ -23,8 +23,8 @@ export default class graficos extends Component {
         
             fecha1: null,
             fecha2: null,
-            polyline: [],
-            line: "",
+            rpmm: [{x:0, y:0}],
+            fecha:  [""],
             viewport: 15,
             max: "5",
             place: "0"
@@ -39,6 +39,14 @@ export default class graficos extends Component {
 
     }
     render() {
+        var cc=parseInt(this.state.place)
+        var marker =[{x:0, y:0}]
+        console.log(marker)
+        
+            marker=[{x:this.state.rpmm[cc].x ,y:this.state.rpmm[cc].y}]
+
+        
+        
         return (
 
             <center>
@@ -48,7 +56,7 @@ export default class graficos extends Component {
 
 
 
-                            <XYPlot width={1050} height={420} >
+                            <XYPlot width={1050} height={420}  >
                                 <VerticalGridLines className="form-control" />
                                 <HorizontalGridLines className="form-control" />
                                 <XAxis className="form-control" />
@@ -60,15 +68,13 @@ export default class graficos extends Component {
                                     }}
                                     lineStyle={{ stroke: 'blue' }}
                                     markStyle={{ stroke: 'blue' }}
-                                    data={[{ x: 1, y: 10 }, { x: 2, y: 5 }, { x: 3, y: 15 }]}
+                                    data={this.state.rpmm}
                                 />
                                 <MarkSeries
                                     className="mark-series-example"
+                                    color='red'
                                     strokeWidth={2}
-                                    data={[
-                                        { x: [1], y: [10] },
-
-                                    ]} />
+                                    data={marker} />
 
                             </XYPlot>
 
@@ -128,7 +134,7 @@ export default class graficos extends Component {
                             </div>
                             <div className="form-row">
                                 <div className="col-md-12 mb-2">
-                                    <label for="customRange2"> {this.state.line[this.state.place]}  </label>
+                                    <label for="customRange2"> RPM:{" "+this.state.rpmm[this.state.place].y} {" "+"Fecha:"+this.state.fecha[this.state.place]} </label>
                                     <input type="range" className="custom-range" min="0" max={this.state.max}
                                         step="1" id="customRange2" value={this.state.place}
                                         onChange={this.act} onClickCapture={this.set_marker} />
@@ -183,7 +189,7 @@ export default class graficos extends Component {
         var horaen = dato2.split(" ")[4].split(":")
         console.log(horaen)
         console.log(fechaen)
-        var url = 'http://192.168.1.6:50188/obd';
+        var url = 'http://192.168.1.5:50188/obd';
         axios.post(url, {
             horaen,
             fechaen,
@@ -191,11 +197,15 @@ export default class graficos extends Component {
             fechain
         })
             .then(function (response) {
+                console.log(response)
                 cv.setState({
-                    polyline: response.data,
-                    max: response.data.length - 1
+                    fecha:response.data.fehca,
+                    rpmm:response.data.rpm,
+                    max:response.data.rpm.length-1
                 })
-                console.log(cv.state.max)
+                console.log(cv.state.fecha+cv.state.rpmm)
+                
+            
 
 
 
