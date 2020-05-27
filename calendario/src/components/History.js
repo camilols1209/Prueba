@@ -4,133 +4,312 @@ import axios from 'axios';
 import { Map, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 
 import "react-datepicker/dist/react-datepicker.css";
+import 'react-vis/dist/style.css';
+
+import {
+  XYPlot,
+  XAxis,
+  YAxis,
+  VerticalGridLines,
+  HorizontalGridLines,
+  LineSeries,
+  MarkSeries
+} from 'react-vis';
 
 
 export default class History extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lng: 0,
-      lat: 0,
-      anno: null,
-      mes: null,
-      dia: null,
-      hora: null,
-      minu: null,
-      sec: null,
-      fecha1: null,
-      fecha2: null,
+      fecha1: [""],
+      fecha2: [""],
+      rpmm1: [{ x: 0, y: 0 }],
+      rpmm2: [{ x: 0, y: 0 }],
+      polyline2: [],
+      fecha: [""],
+      estado: "1",
+
       polyline: [],
-      line: "",
       viewport: 15,
-      max:"5",
-      place:"0"
+      max1: "5",
+      max2: "5",
+      place2: "0",
+      place: "0"
 
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChange2 = this.handleChange2.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.act = this.act.bind(this);
+    this.act2 = this.act2.bind(this);
     this.getz = this.getz.bind(this);
     this.set_marker = this.set_marker.bind(this);
+    this.set_marker2 = this.set_marker2.bind(this);
     this.date_time = this.date_time.bind(this);
+    this.selc = this.selc.bind(this);
 
 
   }
   render() {
+    let  cc1=parseInt(this.state.place)
+    let  cc2=parseInt(this.state.place2)
+    let g1
+    let l1=null;
+    let barra1
+    let mark1
+    let mar1=[{x:this.state.rpmm1[cc1].x ,y:this.state.rpmm1[cc1].y}];
+    let mar2=[{x:this.state.rpmm2[cc2].x ,y:this.state.rpmm2[cc2].y}];
+    let rp1
+    let f1
+    let tx1
+    let txr1
+ 
+    if((this.state.estado === "1") || (this.state.estado === "2")){
+      rp1=<p>{this.state.rpmm1[cc1].y}</p>
+      txr1=<p>RPM 1</p>
+      f1=<p>{this.state.fecha1[cc1]}</p>
+      tx1=<p>Date 1</p>
+
+     
+
+      g1=<LineSeries
+                      className="linemark-series-example"
+                      style={{
+                        strokeWidth: '3px'
+                      }}
+                      lineStyle={{ stroke: 'blue' }}
+                      markStyle={{ stroke: 'blue' }}
+                      data={this.state.rpmm1}
+                    />;
+
+      l1=<Polyline color="teal" positions={this.state.polyline} />;
+      barra1= <input type="range" className="custom-range" min="0" max={this.state.max1}
+      step="1" id="customRange2" value={this.state.place}
+      onChange={this.act} onClickCapture={this.set_marker} />;
+
+      mark1=<MarkSeries
+      className="mark-series-example"
+      color='red'
+      strokeWidth={2}
+      data={mar1} />;
+
+    }else{
+      g1=null;
+      l1=null;
+      barra1=null;
+      mark1=null;
+
+    }
+    let l2 =null;
+    let g2
+    let barra2
+    let mark2
+    let rp2
+    let f2
+    let tx2
+    let txr2
+    if((this.state.estado === "1") || (this.state.estado === "3")){
+      rp2=<p>{this.state.rpmm2[cc2].y}</p>
+      txr2=<p>RPM 2</p>
+      f2=<p>{this.state.fecha2[cc2]}</p>
+      tx2=<p>Date 2</p>
+
+      g2=<LineSeries
+      className="linemark-series-example"
+      color='red'
+      style={{
+        strokeWidth: '3px'
+      }}
+      lineStyle={{ stroke: 'blue' }}
+      markStyle={{ stroke: 'blue' }}
+      data={this.state.rpmm2}
+
+
+    />;
+    l2=<Polyline color="red" positions={this.state.polyline2} />;
+
+    barra2=<input type="range" className="custom-range" min="0" max={this.state.max2}
+    step="1" id="customRange2" value={this.state.place2}
+    onChange={this.act2} onClickCapture={this.set_marker2} />;
+    mark2=<MarkSeries
+    className="mark-series-example"
+    color='green'
+    strokeWidth={2}
+    data={mar2} />;
+
+    }else{
+      g2=null;
+      l2=null;
+      barra2=null;
+    }
+
+
     return (
 
-      <center>
-        <div className="col-md-10 ">
-          <div className="col-md-14 mb-8" >
-            {this._renderMap()}
-          </div>
-          <center className="card card-body">
-            <form className="needs-validation" novalidate>
-              <div className="form-row">
 
-                <div className="col-md-4 mb-3">
-                  <label for="validationTooltip01"> Start :</label>
-                  <DatePicker
-                    className="form-control"
-                    selected={this.state.startDate}
-                    onChange={this.handleChange}
-                    name="startDate"
-                    showTimeSelect
-                    orientation="bottom"
-                    timeFormat="HH:mm"
-                    timeCaption="time"
-                    timeIntervals={30}
-                    dateFormat="yyyy-MM-d hh:mm:ss"
-                  />
-                  <div className="valid-tooltip">
-                    Looks good!
-                  </div>
+      <div>
+        <div className="caja">
+          <select class="form-control form-control-sm" value={this.state.estado} name="estado" onChange={this.selc} >
+            <option value="1">Car 1 and 2</option>
+            <option value="2">car 1</option>
+            <option value="3">car 2</option>
+          </select>
 
-                </div>
-                <div className="col-md-4 mb-3">
-                  <label for="validationTooltip02">End :</label>
-                  <DatePicker
-                    className="form-control"
-                    selected={this.state.endDate}
-                    onChange={this.handleChange2}
-                    name="endtDate"
-                    showTimeSelect
-                    orientation="bottom"
-                    timeFormat="HH:mm"
-                    timeIntervals={30}
-                    timeCaption="time"
-                    dateFormat="yyyy-MM-d hh:mm:ss"
-                  />
-                  <div className="valid-tooltip">
-                    Looks good!
-                  </div>
-
-
-                </div>
-                <div className="col-md-4 mb-3">
-                  <button type="submit" className="btn btn-primary mb-2" onClick={this.onFormSubmit}>Search</button>
-                </div>
-
-              </div>
-              <div className="form-row">
-                <div className="col-md-12 mb-2">
-                  <label for="customRange2"> {this.state.line[this.state.place]}  </label>
-                  <input type="range" className="custom-range" min="0" max={this.state.max}
-                  step="1"id="customRange2" value={this.state.place}
-                   onChange={this.act} onClickCapture={this.set_marker}/>
-
-                </div>
-
-              </div>
-
-            </form>
-
-
-          </center>
+        
+          {tx1}
+          {f1}
+          {txr1}
+          {rp1}
+          {tx2}
+          {f2}
+          {txr2}
+          {rp2}
 
 
         </div>
+       
+        <div>
+          <center>
+            <div className="col-md-10 ">
+              <div className="col-md-14 mb-3" >
+                {this._renderMap(l1,l2)}
+              </div>
+              <center className="card card-body">
 
-      </center>
+                <XYPlot width={950} height={160}  >
+                  <VerticalGridLines className="form-control" />
+                  <HorizontalGridLines className="form-control" />
+                  <XAxis className="form-control" />
+                  <YAxis className="form-control" />
+                  
+                    {g1}
+                    {g2}
+                  {mark1}
+                  {mark2}
+                  
+
+                </XYPlot>
+
+
+
+
+              </center>
+
+              <center className="card card-body-sm">
+                <form className="needs-validation" novalidate>
+                  <div className="form-row">
+
+                    <div className="col-md-4 mb-2">
+                      <label for="validationTooltip01"> Start  :</label>
+                      <DatePicker
+                        className="form-control"
+                        selected={this.state.startDate}
+                        onChange={this.handleChange}
+                        name="startDate"
+                        showTimeSelect
+                        orientation="bottom"
+                        timeFormat="HH:mm"
+                        timeCaption="time"
+                        timeIntervals={30}
+                        dateFormat="yyyy-MM-d hh:mm:ss"
+                      />
+                      <div className="valid-tooltip">
+                        Looks good!
+                  </div>
+
+                    </div>
+                    <div className="col-md-4 mb-2">
+                      <label for="validationTooltip02">End :</label>
+                      <DatePicker
+                        className="form-control"
+                        selected={this.state.endDate}
+                        onChange={this.handleChange2}
+                        name="endtDate"
+                        showTimeSelect
+                        orientation="bottom"
+                        timeFormat="HH:mm"
+                        timeIntervals={30}
+                        timeCaption="time"
+                        dateFormat="yyyy-MM-d hh:mm:ss"
+                      />
+                      <div className="valid-tooltip">
+                        Looks good!
+                  </div>
+
+
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <button type="submit" className="btn btn-primary mb-2" onClick={this.onFormSubmit}>Search</button>
+                    </div>
+
+                  </div>
+                  <div className="form-row">
+                    <div className="col-md-12 mb-2">
+                     {barra1}
+
+                    </div>
+
+                  </div>
+
+                  <div className="form-row">
+                    <div className="col-md-12 mb-2">
+                      
+                      {barra2}
+                    </div>
+
+                  </div>
+
+                </form>
+
+
+              </center>
+            </div>
+
+
+
+
+          </center>
+        </div>
+      </div>
 
 
 
     )
   }
-  set_marker(event){
+  selc(event) {
+
     this.setState({
-      place : event.target.value
+      estado: event.target.value
     })
-    console.log(this.state.place)
-    
 
   }
-  act(event){
+  set_marker(event) {
     this.setState({
-      place : event.target.value
+      place: event.target.value
     })
     console.log(this.state.place)
+
+
+  }
+  set_marker2(event) {
+    this.setState({
+      place2: event.target.value
+    })
+    console.log(this.state.place2)
+
+
+  }
+  act(event) {
+    this.setState({
+      place: event.target.value
+    })
+    console.log(this.state.place)
+  }
+  act2(event) {
+    this.setState({
+      place2: event.target.value
+    })
+    console.log(this.state.place2)
   }
   getz() {
     const leafletMap = this.leafletMap.leafletElement;
@@ -142,10 +321,44 @@ export default class History extends Component {
   }
 
 
-  _renderMap = () => {
+  _renderMap = (l1,l2) => {
 
-    const look =parseInt(this.state.place) 
-    const position = this.state.polyline[look];
+    let look = parseInt(this.state.place)
+    let look2=parseInt(this.state.place2)
+    let position 
+    let mark1=this.state.polyline[look];
+    let mark2=this.state.polyline2[look2];
+    let m1
+    let m2
+  
+   
+    if(this.state.estado === "2") {
+      position=mark1
+     m1= <Marker position={mark1} >
+            <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
+          </Marker>
+       m2=null;
+      
+
+    }else if (this.state.estado ==="3"){
+      position=mark2
+      m2= <Marker position={mark2} >
+             <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
+           </Marker>
+      m1=null;
+    }else if(this.state.estado ==="1"){
+      position=this.state.polyline[0]
+      m1= <Marker position={mark1} >
+             <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
+           </Marker>;
+      m2= <Marker position={mark2} >
+      <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
+      </Marker>;
+
+    }
+    
+    
+    
     return (
       <center>
         <Map
@@ -157,10 +370,11 @@ export default class History extends Component {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
           />
-          <Marker position={position}>
-            <Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>
-          </Marker>
-          <Polyline color="teal" positions={this.state.polyline} />
+          {m1}
+          {m2}
+
+          {l1}
+          {l2}
         </Map>
       </center>
     )
@@ -168,9 +382,9 @@ export default class History extends Component {
 
 
 
-date_time(horain,horaen,fechain,fechaen){
-  const h =this
-  var url = 'http://192.168.1.5:50188/data-time';
+  date_time(horain, horaen, fechain, fechaen) {
+    const h = this
+    var url = 'http://127.0.0.1:50188/data-time';
     axios.post(url, {
       horaen,
       fechaen,
@@ -178,21 +392,25 @@ date_time(horain,horaen,fechain,fechaen){
       fechain
     })
       .then(function (response) {
-       
-        console.log(response.data)
+
+        console.log(response.data.rpm2)
         h.setState({
-          line:response.data
+          rpmm2: response.data.rpm2,
+          fecha2: response.data.fech2,
+          polyline2: response.data.coor2,
+          max2: response.data.coor2.length - 1
+
         })
 
-        
+
 
       })
       .catch(function (error) {
         console.log(error);
       });
-    
 
-}
+
+  }
 
 
 
@@ -213,8 +431,8 @@ date_time(horain,horaen,fechain,fechaen){
     var horaen = dato2.split(" ")[4].split(":").map(Number)
     console.log(horaen)
     console.log(fechaen)
-    this.date_time(horain,horaen,fechain,fechaen)
-    var url = 'http://192.168.1.5:50188/data';
+    this.date_time(horain, horaen, fechain, fechaen)
+    var url = 'http://127.0.0.1:50188/data';
     axios.post(url, {
       horaen,
       fechaen,
@@ -223,12 +441,14 @@ date_time(horain,horaen,fechain,fechaen){
     })
       .then(function (response) {
         cv.setState({
-          polyline: response.data,
-          max :response.data.length-1
+          rpmm1: response.data.rpm1,
+          fecha1: response.data.fech1,
+          polyline: response.data.coor1,
+          max1: response.data.coor1.length - 1
         })
-        console.log(cv.state.max)
+        console.log(response)
 
-        
+
 
       })
       .catch(function (error) {

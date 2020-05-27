@@ -17,11 +17,12 @@ export default class NavBarJesCorp extends Component {
                                 <Link className="nav-link" to="/"> Real time </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/history">History</Link>
+                                <Link className="nav-link" to="/history" onClick={alert('Follow the next steps for History\n'+
+'1. Select from the menu in the left corner which car you would like to see, ex: car 1 \n'+
+'2. Select date on the calendar, ex: Dec 1 2019 \n'+
+'3. Move the navigation bar in the bottom to see the marker with the corresppnding RPM value')}>History</Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/OBDii">Datos OBDii</Link>
-                            </li>
+                        
 
                         </ul>
                     </div>

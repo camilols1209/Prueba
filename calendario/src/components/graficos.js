@@ -21,8 +21,6 @@ export default class graficos extends Component {
         super(props);
         this.state = {
         
-            fecha1: null,
-            fecha2: null,
             rpmm: [{x:0, y:0}],
             fecha:  [""],
             viewport: 15,
